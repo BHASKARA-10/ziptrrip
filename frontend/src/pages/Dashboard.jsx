@@ -14,6 +14,8 @@ export default function Dashboard({ user }) {
   const searchQuery = searchParams.get('q') || '';
   const filterQuery = searchParams.get('filter') || 'inbox';
   const categoryQuery = searchParams.get('category') || '';
+  
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   const loadTodos = async () => {
     try {
@@ -83,7 +85,7 @@ export default function Dashboard({ user }) {
   });
 
   const todaysTasks = filteredTodos.filter(t => t.status !== 'DONE').slice(0, 2);
-  const timelineTasks = filteredTodos;
+  const timelineTasks = filteredTodos.filter(t => t.date === selectedDate);
   const statusCounts = {
     todo: filteredTodos.filter(t => t.status === 'TO-DO').length,
     progress: filteredTodos.filter(t => t.status === 'IN PROGRESS').length,
@@ -115,12 +117,13 @@ export default function Dashboard({ user }) {
     for (let i = 0; i < 7; i++) {
       const d = new Date(sunday);
       d.setDate(sunday.getDate() + i);
-      days.push(`${dayNames[d.getDay()]} ${d.getDate()}`);
+      const label = `${dayNames[d.getDay()]} ${d.getDate()}`;
+      const fullDate = d.toISOString().split('T')[0];
+      days.push({ label, fullDate });
     }
     return days;
   };
   const weekDays = getWeekDays();
-  const currentDayLabel = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()]} ${new Date().getDate()}`;
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -200,12 +203,15 @@ export default function Dashboard({ user }) {
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Weekly Timeline</h2>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 {weekDays.map(day => (
-                  <div key={day} style={{
-                    padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-md)',
-                    backgroundColor: day === currentDayLabel ? 'var(--primary-color)' : 'var(--border-color)',
-                    color: day === currentDayLabel ? 'white' : 'var(--text-secondary)',
-                    fontSize: '0.8rem', fontWeight: '600', userSelect: 'none'
-                  }}>{day}</div>
+                  <div key={day.fullDate} 
+                    onClick={() => setSelectedDate(day.fullDate)}
+                    style={{
+                      padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-md)',
+                      backgroundColor: day.fullDate === selectedDate ? 'var(--primary-color)' : 'var(--border-color)',
+                      color: day.fullDate === selectedDate ? 'white' : 'var(--text-secondary)',
+                      fontSize: '0.8rem', fontWeight: '600', userSelect: 'none', cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                  }}>{day.label}</div>
                 ))}
               </div>
             </div>
@@ -213,7 +219,12 @@ export default function Dashboard({ user }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative' }}>
               <div style={{ position: 'absolute', left: '6px', top: '20px', bottom: '20px', width: '2px', backgroundColor: 'var(--border-color)', zIndex: 0 }}></div>
 
-              {timelineTasks.map(task => {
+              {timelineTasks.length === 0 ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--border-color)' }}>
+                  No tasks for this date.
+                </div>
+              ) : (
+                timelineTasks.map(task => {
                 const sc = statusColor(task.status);
                 return (
                   <div key={task.id} style={{ display: 'flex', gap: '1rem', position: 'relative', zIndex: 1 }}>
