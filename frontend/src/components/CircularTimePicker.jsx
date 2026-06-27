@@ -14,11 +14,21 @@ export default function CircularTimePicker({ value, onChange }) {
 
   useEffect(() => {
     if (value) {
-      const [h, m] = value.split(':').map(Number);
-      if (!isNaN(h) && !isNaN(m)) {
-        setIsAm(h < 12);
-        setHour(h % 12 || 12);
-        setMinute(m);
+      if (value.includes('AM') || value.includes('PM')) {
+        const [timePart, ampmPart] = value.split(' ');
+        const [h, m] = timePart.split(':').map(Number);
+        if (!isNaN(h) && !isNaN(m)) {
+          setIsAm(ampmPart === 'AM');
+          setHour(h === 0 ? 12 : h);
+          setMinute(m);
+        }
+      } else {
+        const [h, m] = value.split(':').map(Number);
+        if (!isNaN(h) && !isNaN(m)) {
+          setIsAm(h < 12);
+          setHour(h % 12 || 12);
+          setMinute(m);
+        }
       }
     }
   }, [value]);
@@ -34,13 +44,10 @@ export default function CircularTimePicker({ value, onChange }) {
   }, []);
 
   const handleApply = () => {
-    let finalHour = hour;
-    if (isAm && finalHour === 12) finalHour = 0;
-    if (!isAm && finalHour < 12) finalHour += 12;
-    
-    const formattedHour = String(finalHour).padStart(2, '0');
+    const ampm = isAm ? 'AM' : 'PM';
+    const formattedHour = String(hour === 0 ? 12 : hour).padStart(2, '0');
     const formattedMinute = String(minute).padStart(2, '0');
-    onChange(`${formattedHour}:${formattedMinute}`);
+    onChange(`${formattedHour}:${formattedMinute} ${ampm}`);
     setIsOpen(false);
   };
 
@@ -105,6 +112,7 @@ export default function CircularTimePicker({ value, onChange }) {
 
   const displayValue = () => {
     if (!value) return '';
+    if (value.includes('AM') || value.includes('PM')) return value;
     let [h, m] = value.split(':').map(Number);
     const ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12 || 12;

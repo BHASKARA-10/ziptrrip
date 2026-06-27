@@ -21,6 +21,7 @@ export default function Dashboard({ user }) {
   
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
   const [showAllToday, setShowAllToday] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('ACTIVE');
 
   const loadTodos = async () => {
     try {
@@ -282,22 +283,22 @@ export default function Dashboard({ user }) {
             <h2 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1.5rem' }}>Task Status</h2>
 
             <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+              <div onClick={() => setStatusFilter(statusFilter === 'TO-DO' ? 'ACTIVE' : 'TO-DO')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', opacity: statusFilter === 'ACTIVE' || statusFilter === 'TO-DO' ? 1 : 0.5, transition: 'opacity 0.2s' }}>
                 <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.todo}</div>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', userSelect: 'none' }}>To-Do</span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+              <div onClick={() => setStatusFilter(statusFilter === 'IN PROGRESS' ? 'ACTIVE' : 'IN PROGRESS')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', opacity: statusFilter === 'ACTIVE' || statusFilter === 'IN PROGRESS' ? 1 : 0.5, transition: 'opacity 0.2s' }}>
                 <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.progress}</div>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', userSelect: 'none' }}>Progress</span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+              <div onClick={() => setStatusFilter(statusFilter === 'DONE' ? 'ACTIVE' : 'DONE')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', opacity: statusFilter === 'ACTIVE' || statusFilter === 'DONE' ? 1 : 0.5, transition: 'opacity 0.2s' }}>
                 <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.done}</div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Done</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', userSelect: 'none' }}>Done</span>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-              {filteredTodos.filter(t => t.status !== 'DONE').map(task => (
+              {filteredTodos.filter(t => statusFilter === 'ACTIVE' ? t.status !== 'DONE' : t.status === statusFilter).map(task => (
                 <div key={task.id} style={{ padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e0e7ff', borderLeft: '4px solid #4f46e5', backgroundColor: '#ffffff', boxShadow: 'var(--shadow-sm)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                     <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>
