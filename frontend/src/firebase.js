@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -12,13 +13,14 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "mock_app_id"
 };
 
-let app, auth, googleProvider;
+let app, auth, googleProvider, db;
 
 try {
   // Initialize Firebase
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   googleProvider = new GoogleAuthProvider();
+  db = getFirestore(app);
   
   // Add Calendar scope for Google Calendar Integration
   googleProvider.addScope('https://www.googleapis.com/auth/calendar.events');
@@ -32,4 +34,4 @@ try {
   console.error("Firebase initialization error", error);
 }
 
-export { auth, googleProvider };
+export { auth, googleProvider, db };
