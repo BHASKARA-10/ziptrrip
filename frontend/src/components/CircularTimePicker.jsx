@@ -30,18 +30,26 @@ export default function CircularTimePicker({ value, onChange }) {
           setMinute(m);
         }
       }
+    } else {
+      setIsAm(true);
+      setHour(12);
+      setMinute(0);
     }
   }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
+        const ampm = isAm ? 'AM' : 'PM';
+        const formattedHour = String(hour === 0 ? 12 : hour).padStart(2, '0');
+        const formattedMinute = String(minute).padStart(2, '0');
+        onChange(`${formattedHour}:${formattedMinute} ${ampm}`);
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [hour, minute, isAm, onChange]);
 
   const handleApply = () => {
     const ampm = isAm ? 'AM' : 'PM';
