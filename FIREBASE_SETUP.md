@@ -105,3 +105,31 @@ VITE_FIREBASE_APP_ID=1:123456789:web:abcdef123456
 - The **static login** (`test` / `test123`) works without any Firebase configuration
 - Google Calendar sync only works when logged in via Google (not static login)
 - When using static login, the Calendar page shows tasks in a general view but does NOT sync with Google Calendar
+
+---
+
+## Step 7: Create Firestore Database
+
+Since the code is already migrated to use Firestore, you need to create the database in your Firebase Console:
+
+1. In your Firebase Console, click on **Firestore Database** in the left sidebar.
+2. Click **Create database**.
+3. **Location:** Choose a location close to you (e.g., `asia-south1 (Mumbai)`) and click **Next**.
+4. **Security Rules:** Select **Start in test mode**. This allows your app to read and write data during development without strict security rules blocking you. (It gives you 30 days of open access).
+5. Click **Create**.
+6. Your database is now ready! You can now create tasks in the app and they will instantly appear in the Firestore console.
+
+---
+
+## Step 8: Deploying to Vercel
+
+Yes, you can absolutely deploy this React app to Vercel! It is the recommended platform for Vite applications.
+
+1. Push all your code to a GitHub repository.
+2. Go to [Vercel.com](https://vercel.com/) and sign in with GitHub.
+3. Click **Add New... -> Project** and import your GitHub repository.
+4. Vercel will automatically detect that it's a **Vite** project and configure the build settings.
+5. **Crucial Step:** Before clicking Deploy, expand the **Environment Variables** section.
+6. Copy all the variables from your local `frontend/.env` file (`VITE_FIREBASE_API_KEY`, etc.) and paste them into Vercel.
+7. Click **Deploy**.
+8. Within a minute, you'll have a live, production URL for your app!
