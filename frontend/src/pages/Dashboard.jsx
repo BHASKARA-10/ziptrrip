@@ -122,6 +122,13 @@ export default function Dashboard({ user }) {
   const weekDays = getWeekDays();
   const currentDayLabel = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()]} ${new Date().getDate()}`;
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+
   if (loading) {
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--text-secondary)' }}>Loading tasks...</div>;
   }
@@ -133,7 +140,7 @@ export default function Dashboard({ user }) {
       {/* Header Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Good Morning, {user?.name?.split(' ')[0] || 'User'}!</p>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{getGreeting()}, ziptrrip!</p>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
             {searchQuery ? `Search results for "${searchQuery}"` : (
               <>You have <span style={{ color: 'var(--primary-light)' }}>{filteredTodos.length} tasks</span> this month 👍</>
