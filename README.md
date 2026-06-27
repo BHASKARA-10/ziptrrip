@@ -1,3 +1,6 @@
+LIVE LINK : https://ziptrrip.vercel.app/
+USERNAME: test
+PASSWORD: test123
 # ziptrrip - Task Management Dashboard
 
 **ziptrrip** is a modern, responsive task management application built with React and Vite. It helps you stay on top of your workflow by organizing tasks, categorizing them, and keeping everything in sync with your Google Calendar.
