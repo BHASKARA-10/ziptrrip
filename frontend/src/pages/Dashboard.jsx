@@ -91,7 +91,7 @@ export default function Dashboard({ user }) {
   });
 
   const todaysTasks = filteredTodos
-    .filter(t => t.status !== 'DONE' && (showAllToday || t.date === getLocalDateString()))
+    .filter(t => (showAllToday ? true : t.status !== 'DONE') && (showAllToday || t.date === getLocalDateString()))
     .slice(0, showAllToday ? undefined : 2);
     
   const timelineTasks = filteredTodos.filter(t => t.date === selectedDate);
@@ -299,15 +299,19 @@ export default function Dashboard({ user }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto', paddingRight: '0.5rem' }}>
               {filteredTodos.filter(t => statusFilter === 'ACTIVE' ? t.status !== 'DONE' : t.status === statusFilter).map(task => (
-                <div key={task.id} style={{ padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e0e7ff', borderLeft: '4px solid #4f46e5', backgroundColor: '#ffffff', boxShadow: 'var(--shadow-sm)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>
-                      <ClockIcon width={14} />
+                <Link to={'/task/' + task.id} key={task.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e0e7ff', borderLeft: '4px solid #4f46e5', backgroundColor: '#ffffff', boxShadow: 'var(--shadow-sm)', cursor: 'pointer', transition: 'transform 0.1s' }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
+                      <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>
+                        <ClockIcon width={14} />
+                      </div>
+                      <h4 style={{ fontSize: '0.9rem', fontWeight: '600' }}>{task.title}</h4>
                     </div>
-                    <h4 style={{ fontSize: '0.9rem', fontWeight: '600' }}>{task.title}</h4>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginLeft: '2.25rem' }}>{task.time || 'No time set'}</p>
                   </div>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginLeft: '2.25rem' }}>{task.time || 'No time set'}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

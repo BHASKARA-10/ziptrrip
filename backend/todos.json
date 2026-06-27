@@ -1,19 +1,5 @@
 [
   {
-    "id": "1",
-    "title": "Team Meeting",
-    "description": "Group discussion for the new product launch and roadmap review.",
-    "time": "10:00 AM",
-    "date": "2024-10-14",
-    "progress": 48,
-    "status": "IN PROGRESS",
-    "priority": "Medium",
-    "category": "Work",
-    "createdAt": "2024-10-10T10:00:00.000Z",
-    "deadline": "2024-10-20",
-    "subTasks": []
-  },
-  {
     "id": "2",
     "title": "UI Design",
     "description": "Create a high-fidelity homepage prototype for the Olakart App.",
@@ -34,27 +20,13 @@
     ]
   },
   {
-    "id": "3",
-    "title": "Wireframing TaskFlow App",
-    "description": "Make some ideation from sketches and wireframes for the core navigation system.",
-    "time": "12:00 PM",
-    "date": "2024-10-14",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "High",
-    "category": "Work",
-    "createdAt": "2024-10-12T12:00:00.000Z",
-    "deadline": "2024-10-21",
-    "subTasks": []
-  },
-  {
     "id": "4",
     "title": "UI Design System",
     "description": "Define tokens for typography, colors, and shadows for the enterprise library.",
     "time": "1:30 PM",
     "date": "2024-10-14",
-    "progress": 60,
-    "status": "IN PROGRESS",
+    "progress": 100,
+    "status": "DONE",
     "priority": "Medium",
     "category": "Work",
     "createdAt": "2024-10-08T09:00:00.000Z",
@@ -73,12 +45,12 @@
       {
         "id": "st3",
         "title": "Update button component interactions",
-        "completed": false
+        "completed": true
       },
       {
         "id": "st4",
         "title": "Publish updated documentation",
-        "completed": false
+        "completed": true
       }
     ]
   },
@@ -94,62 +66,6 @@
     "category": "Work",
     "createdAt": "2024-10-14T09:00:00.000Z",
     "deadline": "2024-10-14",
-    "subTasks": []
-  },
-  {
-    "id": "7",
-    "title": "asdfg",
-    "description": "sgdg",
-    "time": "",
-    "date": "2026-06-13",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:06:45.127Z",
-    "deadline": "2026-06-30",
-    "subTasks": []
-  },
-  {
-    "id": "10",
-    "title": "sdhfh",
-    "description": "ddg",
-    "time": "",
-    "date": "2026-06-26",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:41:00.725Z",
-    "deadline": "",
-    "subTasks": []
-  },
-  {
-    "id": "11",
-    "title": "Sfsg",
-    "description": "SGg",
-    "time": "",
-    "date": "2026-06-27",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:41:19.454Z",
-    "deadline": "",
-    "subTasks": []
-  },
-  {
-    "id": "12",
-    "title": "cj",
-    "description": "jdjfj",
-    "time": "",
-    "date": "2026-07-01",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:43:15.287Z",
-    "deadline": "",
     "subTasks": []
   }
 ]
