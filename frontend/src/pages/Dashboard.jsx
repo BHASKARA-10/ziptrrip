@@ -90,7 +90,7 @@ export default function Dashboard({ user }) {
   });
 
   const todaysTasks = filteredTodos
-    .filter(t => t.status !== 'DONE' && t.date === getLocalDateString())
+    .filter(t => t.status !== 'DONE' && (showAllToday || t.date === getLocalDateString()))
     .slice(0, showAllToday ? undefined : 2);
     
   const timelineTasks = filteredTodos.filter(t => t.date === selectedDate);
@@ -172,15 +172,13 @@ export default function Dashboard({ user }) {
           {/* Today's Tasks Cards */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Today's Tasks</h2>
-              {filteredTodos.filter(t => t.status !== 'DONE' && t.date === getLocalDateString()).length > 2 && (
-                <span onClick={() => setShowAllToday(!showAllToday)} style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none' }}>
-                  {showAllToday ? 'Show Less' : 'See All'}
-                </span>
-              )}
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{showAllToday ? 'All Tasks' : "Today's Tasks"}</h2>
+              <span onClick={() => setShowAllToday(!showAllToday)} style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none' }}>
+                {showAllToday ? 'Show Less' : 'See All'}
+              </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: showAllToday ? '1fr' : '1fr 1fr', gap: '1rem' }}>
               {todaysTasks.map((task, i) => (
                 <Link to={'/task/' + task.id} key={task.id} style={{ textDecoration: 'none', color: 'white' }}>
                   <div style={{
