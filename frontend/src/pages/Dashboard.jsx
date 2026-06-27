@@ -273,15 +273,15 @@ export default function Dashboard({ user }) {
 
             <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: '700' }}>{statusCounts.todo}</div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>To-Do</span>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.todo}</div>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', userSelect: 'none' }}>To-Do</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706', fontSize: '1.1rem', fontWeight: '700' }}>{statusCounts.progress}</div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Progress</span>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.progress}</div>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', userSelect: 'none' }}>Progress</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', fontSize: '1.1rem', fontWeight: '700' }}>{statusCounts.done}</div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', fontSize: '1.1rem', fontWeight: '700', userSelect: 'none' }}>{statusCounts.done}</div>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Done</span>
               </div>
             </div>
