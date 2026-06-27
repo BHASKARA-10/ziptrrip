@@ -109,33 +109,5 @@
     "createdAt": "2026-06-27T16:06:45.127Z",
     "deadline": "2026-06-30",
     "subTasks": []
-  },
-  {
-    "id": "8",
-    "title": "bhaskar",
-    "description": "fsdf",
-    "time": "",
-    "date": "2026-06-27",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:10:37.800Z",
-    "deadline": "2026-06-30",
-    "subTasks": []
-  },
-  {
-    "id": "9",
-    "title": "Test Agent Task",
-    "description": "Agent testing the UI",
-    "time": "",
-    "date": "2026-06-27",
-    "progress": 0,
-    "status": "TO-DO",
-    "priority": "Medium",
-    "category": "Personal",
-    "createdAt": "2026-06-27T16:25:09.495Z",
-    "deadline": "",
-    "subTasks": []
   }
 ]
