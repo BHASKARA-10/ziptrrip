@@ -223,8 +223,7 @@ export default function Dashboard({ user }) {
                 <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--border-color)' }}>
                   No tasks for this date.
                 </div>
-              ) : (
-                timelineTasks.map(task => {
+              ) : timelineTasks.map(task => {
                 const sc = statusColor(task.status);
                 return (
                   <div key={task.id} style={{ display: 'flex', gap: '1rem', position: 'relative', zIndex: 1 }}>
