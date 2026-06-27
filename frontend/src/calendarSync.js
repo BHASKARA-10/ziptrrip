@@ -21,7 +21,7 @@ export const syncTaskToGoogleCalendar = async (task, token) => {
     const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
       headers: {
-        'Authorization': \`Bearer \${token}\`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(event)

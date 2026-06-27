@@ -1,10 +1,11 @@
-import { useParams, Link } from 'react-router-dom';
-import { PencilIcon, TrashIcon, CalendarIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeftIcon, PencilIcon, TrashIcon, CalendarIcon, CheckIcon } from '@heroicons/react/24/outline';
 
-export default function TaskDetail() {
+export default function TaskDetail({ user }) {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Mock data for task detail
+  // Mock data for task detail matching the design exactly
   const task = {
     id: id || '1',
     title: 'UI Design System Refresh',
@@ -31,6 +32,14 @@ export default function TaskDetail() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
       
+      {/* Back button */}
+      <button 
+        onClick={() => navigate(-1)} 
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', fontWeight: '500', fontSize: '0.9rem', padding: 0 }}
+      >
+        <ArrowLeftIcon width={18} /> Back
+      </button>
+
       {/* Breadcrumb and Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
@@ -95,25 +104,26 @@ export default function TaskDetail() {
               </div>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {task.subTasks.map(subtask => (
-                <div key={subtask.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {task.subTasks.map((subtask, index) => (
+                <div key={subtask.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 0', borderBottom: index < task.subTasks.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ 
                       width: '24px', height: '24px', borderRadius: '4px', 
                       backgroundColor: subtask.completed ? '#14b8a6' : 'transparent',
                       border: subtask.completed ? 'none' : '2px solid var(--border-color)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white'
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+                      cursor: 'pointer', transition: 'all 0.2s ease'
                     }}>
                       {subtask.completed && <CheckIcon width={16} strokeWidth={3} />}
                     </div>
                     <span style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: '500' }}>{subtask.title}</span>
                   </div>
-                  <div style={{ color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 'bold' }}>...</div>
+                  <div style={{ color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.25rem' }}>⋯</div>
                 </div>
               ))}
               
-              <button style={{ marginTop: '1rem', width: '100%', padding: '1rem', borderRadius: 'var(--radius-md)', border: '2px dashed var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer' }}>
+              <button style={{ marginTop: '1rem', width: '100%', padding: '1rem', borderRadius: 'var(--radius-md)', border: '2px dashed var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', transition: 'border-color 0.2s ease' }}>
                 + Add Sub-task
               </button>
             </div>
@@ -128,7 +138,7 @@ export default function TaskDetail() {
           <div style={{ backgroundColor: 'var(--bg-surface)', padding: '1.5rem', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)' }}>
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600', marginBottom: '0.75rem' }}>Current Status</h3>
-              <div style={{ backgroundColor: '#5eead4', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ backgroundColor: '#5eead4', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0f766e', fontWeight: '600', fontSize: '0.95rem' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0f766e' }}></div>
                   {task.status}
@@ -140,7 +150,7 @@ export default function TaskDetail() {
             <div>
               <h3 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600', marginBottom: '0.75rem' }}>Priority Level</h3>
               <div style={{ backgroundColor: '#fee2e2', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#b91c1c', fontWeight: '600', fontSize: '0.95rem' }}>
-                <span style={{ fontWeight: 'bold' }}>!</span>
+                <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>!</span>
                 {task.priority}
               </div>
             </div>
@@ -158,8 +168,8 @@ export default function TaskDetail() {
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '1.5rem' }}>{task.projectSubDesc}</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ display: 'flex' }}>
-                  {[1, 2, 3].map(i => (
-                    <div key={i} style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#cbd5e1', border: '2px solid white', marginLeft: i > 1 ? '-10px' : '0', zIndex: 4-i }}></div>
+                  {['#6366f1', '#f43f5e', '#10b981'].map((bgColor, i) => (
+                    <div key={i} style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: bgColor, border: '2px solid white', marginLeft: i > 0 ? '-10px' : '0', zIndex: 3 - i }}></div>
                   ))}
                 </div>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '500', marginLeft: '0.5rem' }}>+12</span>

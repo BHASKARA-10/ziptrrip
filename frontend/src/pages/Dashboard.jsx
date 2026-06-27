@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { PlusIcon, PencilIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, CheckIcon, TrashIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { syncTaskToGoogleCalendar } from '../calendarSync';
 
 export default function Dashboard({ user }) {
@@ -63,32 +63,36 @@ export default function Dashboard({ user }) {
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               {todaysTasks.map(task => (
-                <div key={task.id} style={{ 
-                  backgroundColor: task.color, 
-                  color: 'white', 
-                  padding: '1.5rem', 
-                  borderRadius: 'var(--radius-xl)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                  boxShadow: 'var(--shadow-md)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{task.title} {task.emoji}</h3>
-                    <div style={{ cursor: 'pointer' }}>...</div>
+                <Link to={`/task/${task.id}`} key={task.id} style={{ textDecoration: 'none', color: 'white' }}>
+                  <div style={{ 
+                    backgroundColor: task.color, 
+                    color: 'white', 
+                    padding: '1.5rem', 
+                    borderRadius: 'var(--radius-xl)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    boxShadow: 'var(--shadow-md)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{task.title} {task.emoji}</h3>
+                      <div style={{ cursor: 'pointer', fontSize: '1.25rem' }}>⋮</div>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', opacity: 0.9, lineHeight: '1.4' }}>{task.desc}</p>
+                    
+                    <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', fontWeight: '600' }}>
+                      <span>{task.time}</span>
+                      <span>Progress: {task.progress}%</span>
+                    </div>
+                    <div style={{ width: '100%', backgroundColor: 'rgba(255,255,255,0.3)', height: '6px', borderRadius: '3px' }}>
+                      <div style={{ width: task.progress + '%', backgroundColor: 'white', height: '100%', borderRadius: '3px', transition: 'width 0.5s ease' }}></div>
+                    </div>
                   </div>
-                  <p style={{ fontSize: '0.9rem', opacity: 0.9, lineHeight: '1.4' }}>{task.desc}</p>
-                  
-                  <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', fontWeight: '600' }}>
-                    <span>{task.time}</span>
-                    <span>Progress: {task.progress}%</span>
-                  </div>
-                  <div style={{ width: '100%', backgroundColor: 'rgba(255,255,255,0.3)', height: '6px', borderRadius: '3px' }}>
-                    <div style={{ width: \`\${task.progress}%\`, backgroundColor: 'white', height: '100%', borderRadius: '3px' }}></div>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -119,7 +123,7 @@ export default function Dashboard({ user }) {
               
               {timelineTasks.map(task => (
                 <div key={task.id} style={{ display: 'flex', gap: '1rem', position: 'relative', zIndex: 1 }}>
-                  <div style={{ marginTop: '1.5rem', width: '14px', height: '14px', borderRadius: '50%', backgroundColor: task.color, border: '3px solid var(--bg-main)' }}></div>
+                  <div style={{ marginTop: '1.5rem', width: '14px', height: '14px', borderRadius: '50%', backgroundColor: task.color, border: '3px solid var(--bg-main)', flexShrink: 0 }}></div>
                   <div style={{ 
                     flex: 1, 
                     backgroundColor: 'var(--bg-surface)', 
@@ -129,7 +133,8 @@ export default function Dashboard({ user }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    opacity: task.status === 'DONE' ? 0.6 : 1
+                    opacity: task.status === 'DONE' ? 0.6 : 1,
+                    transition: 'opacity 0.2s ease'
                   }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
@@ -145,13 +150,13 @@ export default function Dashboard({ user }) {
                           <ClockIcon width={14} /> {task.time}
                         </span>
                       </div>
-                      <Link to={\`/task/\${task.id}\`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Link to={'/task/' + task.id} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.25rem', textDecoration: task.status === 'DONE' ? 'line-through' : 'none' }}>{task.title}</h4>
                       </Link>
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textDecoration: task.status === 'DONE' ? 'line-through' : 'none' }}>{task.desc}</p>
                     </div>
                     
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
                       <button style={{ padding: '0.5rem', borderRadius: 'var(--radius-md)', border: 'none', backgroundColor: '#f1f5f9', cursor: 'pointer', color: 'var(--text-secondary)' }}><PencilIcon width={18} /></button>
                       <button style={{ padding: '0.5rem', borderRadius: 'var(--radius-md)', border: 'none', backgroundColor: task.status === 'DONE' ? '#22c55e' : '#f1f5f9', cursor: 'pointer', color: task.status === 'DONE' ? 'white' : 'var(--text-secondary)' }}><CheckIcon width={18} /></button>
                       <button style={{ padding: '0.5rem', borderRadius: 'var(--radius-md)', border: 'none', backgroundColor: '#f1f5f9', cursor: 'pointer', color: 'var(--text-secondary)' }}><TrashIcon width={18} /></button>
@@ -177,8 +182,8 @@ export default function Dashboard({ user }) {
                 <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>To-Do</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#ccfbf1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0d9488' }}>
-                  <div style={{ width: '20px', height: '4px', backgroundColor: '#0d9488', borderRadius: '2px' }}></div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706' }}>
+                  <span style={{ fontSize: '1.25rem' }}>😊</span>
                 </div>
                 <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Progress</span>
               </div>
@@ -216,6 +221,19 @@ export default function Dashboard({ user }) {
         </div>
 
       </div>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '1.5rem 0', marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <p style={{ fontWeight: '700', fontSize: '0.95rem' }}>ziptrrip Inc.</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>© 2024 ziptrrip Inc. Efficiency at scale.</p>
+        </div>
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          <a href="#" style={{ fontSize: '0.85rem', color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '500' }}>Privacy Policy</a>
+          <a href="#" style={{ fontSize: '0.85rem', color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '500' }}>Terms of Service</a>
+          <a href="#" style={{ fontSize: '0.85rem', color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '500' }}>Contact Support</a>
+        </div>
+      </footer>
 
     </div>
   );
