@@ -69,7 +69,7 @@ export default function TopNav({ user }) {
       position: 'relative'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary-color)', userSelect: 'none' }}>ziptrrip</span>
+        <img src="/logo.png" alt="ziptrrip" style={{ height: '32px', userSelect: 'none' }} />
       </div>
 
       <nav style={{ display: 'flex', gap: '2rem', height: '100%', alignItems: 'center' }}>
@@ -143,13 +143,7 @@ export default function TopNav({ user }) {
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
           >
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-            ) : (
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem', userSelect: 'none' }}>
-                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-            )}
+            <img src={user?.photoURL || "/logo.png"} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
           </div>
           
           {showProfileMenu && (

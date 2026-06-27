@@ -97,29 +97,7 @@ export default function Sidebar() {
             )
           })}
         </ul>
-
-        <div style={{ padding: '1rem 1.5rem' }}>
-          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-            <PlusIcon width={20} />
-            Create New List
-          </button>
-        </div>
       </nav>
-
-      <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          <li style={{ marginBottom: '1rem' }}>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: '500' }}>
-              <QuestionMarkCircleIcon width={20} /> Help
-            </a>
-          </li>
-          <li>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: '500' }}>
-              <ArchiveBoxIcon width={20} /> Archive
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 }
