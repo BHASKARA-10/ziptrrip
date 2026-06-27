@@ -162,7 +162,7 @@ export default function Dashboard({ user }) {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Today's Tasks</h2>
-              <span style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer' }}>See All</span>
+              <Link to="/?filter=today" style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none' }}>See All</Link>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
