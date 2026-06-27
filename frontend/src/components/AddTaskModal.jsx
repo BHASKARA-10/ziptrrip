@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import CircularTimePicker from './CircularTimePicker';
 
 export default function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
   const [title, setTitle] = useState('');
@@ -70,9 +71,9 @@ export default function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
               <label>Date</label>
               <input type="date" value={date} onChange={e => setDate(e.target.value)} />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ position: 'relative' }}>
               <label>Time</label>
-              <input type="time" value={time} onChange={e => setTime(e.target.value)} />
+              <CircularTimePicker value={time} onChange={setTime} />
             </div>
           </div>
 

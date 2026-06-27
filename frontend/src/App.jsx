@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import TaskDetail from './pages/TaskDetail';
 import Login from './pages/Login';
 import Calendar from './pages/Calendar';
+import Settings from './pages/Settings';
 import Sidebar from './components/Sidebar';
 import TopNav from './components/TopNav';
 
@@ -40,6 +41,7 @@ function App() {
             <Route path="/" element={<Dashboard user={user} />} />
             <Route path="/task/:id" element={<TaskDetail user={user} />} />
             <Route path="/calendar" element={<Calendar user={user} />} />
+            <Route path="/settings" element={<Settings />} />
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

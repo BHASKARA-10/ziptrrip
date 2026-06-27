@@ -1,12 +1,32 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon, BellIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
 export default function TopNav({ user }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const menuRef = useRef(null);
+  const notifRef = useRef(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     if (user?.type === 'google') {
@@ -16,16 +36,23 @@ export default function TopNav({ user }) {
     navigate('/login');
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/');
+    }
+  };
+
   const navLinks = [
     { name: 'Dashboard', path: '/' },
     { name: 'Calendar', path: '/calendar' },
-    { name: 'Team', path: '#' },
-    { name: 'Settings', path: '#' },
+    { name: 'Settings', path: '/settings' },
   ];
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
-    if (path === '#') return false;
     return location.pathname.startsWith(path);
   };
 
@@ -38,7 +65,8 @@ export default function TopNav({ user }) {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 2rem',
-      flexShrink: 0
+      flexShrink: 0,
+      position: 'relative'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary-color)', userSelect: 'none' }}>ziptrrip</span>
@@ -66,11 +94,13 @@ export default function TopNav({ user }) {
       </nav>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-        <div style={{ position: 'relative' }}>
+        <form onSubmit={handleSearch} style={{ position: 'relative' }}>
           <MagnifyingGlassIcon width={18} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
           <input
             type="text"
             placeholder="Search a task..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             style={{
               padding: '0.5rem 1rem 0.5rem 2.5rem',
               borderRadius: '20px',
@@ -79,25 +109,73 @@ export default function TopNav({ user }) {
               width: '200px',
               fontFamily: 'Inter, sans-serif',
               fontSize: '0.85rem',
-              outline: 'none'
+              outline: 'none',
+              transition: 'border-color 0.2s'
             }}
+            onFocus={(e) => e.target.style.borderColor = 'var(--primary-light)'}
+            onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
           />
+        </form>
+
+        <div ref={notifRef} style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center' }}
+          >
+            <BellIcon width={24} />
+          </button>
+          
+          {showNotifications && (
+            <div style={{
+              position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem',
+              width: '250px', backgroundColor: 'white', borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border-color)',
+              zIndex: 50, padding: '1rem'
+            }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>Notifications</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', padding: '1rem 0' }}>No new notifications</p>
+            </div>
+          )}
         </div>
 
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center' }}>
-          <BellIcon width={24} />
-        </button>
-
-        <div
-          onClick={handleLogout}
-          title="Click to logout"
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-        >
-          {user?.photoURL ? (
-            <img src={user.photoURL} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-          ) : (
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem', userSelect: 'none' }}>
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+        <div ref={menuRef} style={{ position: 'relative' }}>
+          <div
+            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          >
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+            ) : (
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem', userSelect: 'none' }}>
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+            )}
+          </div>
+          
+          {showProfileMenu && (
+            <div style={{
+              position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem',
+              width: '180px', backgroundColor: 'white', borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border-color)',
+              zIndex: 50, overflow: 'hidden'
+            }}>
+              <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border-color)' }}>
+                <p style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)' }}>{user?.name || 'User'}</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email || 'user@example.com'}</p>
+              </div>
+              <Link to="/settings" onClick={() => setShowProfileMenu(false)} style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.85rem', color: 'var(--text-primary)', textDecoration: 'none' }} 
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-main)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}>
+                Settings
+              </Link>
+              <button 
+                onClick={handleLogout}
+                style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '0.75rem 1rem', fontSize: '0.85rem', color: '#dc2626', cursor: 'pointer' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#fef2f2'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                Sign out
+              </button>
             </div>
           )}
         </div>

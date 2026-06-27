@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { PlusIcon, PencilIcon, CheckIcon, TrashIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { fetchTodos, createTodo, updateTodo, deleteTodo } from '../api';
 import { syncTaskToGoogleCalendar } from '../calendarSync';
@@ -9,6 +9,9 @@ export default function Dashboard({ user }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get('q') || '';
 
   const loadTodos = async () => {
     try {
@@ -59,12 +62,17 @@ export default function Dashboard({ user }) {
     }
   };
 
-  const todaysTasks = todos.filter(t => t.status !== 'DONE').slice(0, 2);
-  const timelineTasks = todos;
+  const filteredTodos = todos.filter(t => 
+    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (t.description && t.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const todaysTasks = filteredTodos.filter(t => t.status !== 'DONE').slice(0, 2);
+  const timelineTasks = filteredTodos;
   const statusCounts = {
-    todo: todos.filter(t => t.status === 'TO-DO').length,
-    progress: todos.filter(t => t.status === 'IN PROGRESS').length,
-    done: todos.filter(t => t.status === 'DONE').length
+    todo: filteredTodos.filter(t => t.status === 'TO-DO').length,
+    progress: filteredTodos.filter(t => t.status === 'IN PROGRESS').length,
+    done: filteredTodos.filter(t => t.status === 'DONE').length
   };
 
   const statusColor = (status) => {
@@ -81,6 +89,25 @@ export default function Dashboard({ user }) {
 
   const cardColors = ['#0d47a1', '#d32f2f', '#7c3aed', '#0891b2'];
 
+  const getWeekDays = () => {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 is Sunday
+    const dist = currentDay === 0 ? -6 : 1 - currentDay; 
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + dist);
+    
+    const days = [];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      days.push(`${dayNames[d.getDay()]} ${d.getDate()}`);
+    }
+    return days;
+  };
+  const weekDays = getWeekDays();
+  const currentDayLabel = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()]} ${new Date().getDate()}`;
+
   if (loading) {
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--text-secondary)' }}>Loading tasks...</div>;
   }
@@ -93,7 +120,11 @@ export default function Dashboard({ user }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Good Morning, {user?.name?.split(' ')[0] || 'User'}!</p>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>You have <span style={{ color: 'var(--primary-light)' }}>{todos.length} tasks</span> this month 👍</h1>
+          <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+            {searchQuery ? `Search results for "${searchQuery}"` : (
+              <>You have <span style={{ color: 'var(--primary-light)' }}>{filteredTodos.length} tasks</span> this month 👍</>
+            )}
+          </h1>
         </div>
         <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '0.75rem 2rem', borderRadius: '30px' }}>
           <PlusIcon width={20} />
@@ -147,11 +178,11 @@ export default function Dashboard({ user }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Weekly Timeline</h2>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {['Mon 11', 'Tue 12', 'Wed 13', 'Thu 14', 'Fri 15'].map(day => (
+                {weekDays.map(day => (
                   <div key={day} style={{
                     padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-md)',
-                    backgroundColor: day === 'Thu 14' ? 'var(--primary-color)' : 'var(--border-color)',
-                    color: day === 'Thu 14' ? 'white' : 'var(--text-secondary)',
+                    backgroundColor: day === currentDayLabel ? 'var(--primary-color)' : 'var(--border-color)',
+                    color: day === currentDayLabel ? 'white' : 'var(--text-secondary)',
                     fontSize: '0.8rem', fontWeight: '600', userSelect: 'none'
                   }}>{day}</div>
                 ))}
@@ -225,7 +256,7 @@ export default function Dashboard({ user }) {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {todos.filter(t => t.status !== 'DONE').slice(0, 3).map(task => (
+              {filteredTodos.filter(t => t.status !== 'DONE').slice(0, 3).map(task => (
                 <div key={task.id} style={{ padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e0e7ff', borderLeft: '4px solid #4f46e5', backgroundColor: '#ffffff', boxShadow: 'var(--shadow-sm)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                     <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>
