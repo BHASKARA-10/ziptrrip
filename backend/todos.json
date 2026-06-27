@@ -19,8 +19,8 @@
     "description": "Create a high-fidelity homepage prototype for the Olakart App.",
     "time": "11:00 AM",
     "date": "2024-10-14",
-    "progress": 50,
-    "status": "IN PROGRESS",
+    "progress": 100,
+    "status": "DONE",
     "priority": "High",
     "category": "Work",
     "createdAt": "2024-10-11T11:00:00.000Z",
@@ -122,6 +122,20 @@
     "category": "Personal",
     "createdAt": "2026-06-27T16:10:37.800Z",
     "deadline": "2026-06-30",
+    "subTasks": []
+  },
+  {
+    "id": "9",
+    "title": "Test Agent Task",
+    "description": "Agent testing the UI",
+    "time": "",
+    "date": "2026-06-27",
+    "progress": 0,
+    "status": "TO-DO",
+    "priority": "Medium",
+    "category": "Personal",
+    "createdAt": "2026-06-27T16:25:09.495Z",
+    "deadline": "",
     "subTasks": []
   }
 ]

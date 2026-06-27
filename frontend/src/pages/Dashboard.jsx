@@ -20,6 +20,7 @@ export default function Dashboard({ user }) {
   const categoryQuery = searchParams.get('category') || '';
   
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
+  const [showAllToday, setShowAllToday] = useState(false);
 
   const loadTodos = async () => {
     try {
@@ -88,7 +89,10 @@ export default function Dashboard({ user }) {
     return true;
   });
 
-  const todaysTasks = filteredTodos.filter(t => t.status !== 'DONE').slice(0, 2);
+  const todaysTasks = filteredTodos
+    .filter(t => t.status !== 'DONE' && t.date === getLocalDateString())
+    .slice(0, showAllToday ? undefined : 2);
+    
   const timelineTasks = filteredTodos.filter(t => t.date === selectedDate);
   const statusCounts = {
     todo: filteredTodos.filter(t => t.status === 'TO-DO').length,
@@ -169,7 +173,11 @@ export default function Dashboard({ user }) {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Today's Tasks</h2>
-              <Link to="/?filter=today" style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none' }}>See All</Link>
+              {filteredTodos.filter(t => t.status !== 'DONE' && t.date === getLocalDateString()).length > 2 && (
+                <span onClick={() => setShowAllToday(!showAllToday)} style={{ color: 'var(--primary-color)', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none' }}>
+                  {showAllToday ? 'Show Less' : 'See All'}
+                </span>
+              )}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
