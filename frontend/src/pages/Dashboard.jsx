@@ -12,6 +12,8 @@ export default function Dashboard({ user }) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get('q') || '';
+  const filterQuery = searchParams.get('filter') || 'inbox';
+  const categoryQuery = searchParams.get('category') || '';
 
   const loadTodos = async () => {
     try {
@@ -62,10 +64,23 @@ export default function Dashboard({ user }) {
     }
   };
 
-  const filteredTodos = todos.filter(t => 
-    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    (t.description && t.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredTodos = todos.filter(t => {
+    // text search
+    if (searchQuery && !t.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        (!t.description || !t.description.toLowerCase().includes(searchQuery.toLowerCase()))) {
+      return false;
+    }
+    // category filter
+    if (categoryQuery && t.category !== categoryQuery) {
+      return false;
+    }
+    // preset filters
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (filterQuery === 'today' && t.date !== todayStr) return false;
+    if (filterQuery === 'upcoming' && t.date <= todayStr) return false;
+    
+    return true;
+  });
 
   const todaysTasks = filteredTodos.filter(t => t.status !== 'DONE').slice(0, 2);
   const timelineTasks = filteredTodos;
@@ -92,15 +107,14 @@ export default function Dashboard({ user }) {
   const getWeekDays = () => {
     const today = new Date();
     const currentDay = today.getDay(); // 0 is Sunday
-    const dist = currentDay === 0 ? -6 : 1 - currentDay; 
-    const monday = new Date(today);
-    monday.setDate(today.getDate() + dist);
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - currentDay);
     
     const days = [];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    for (let i = 0; i < 5; i++) {
-      const d = new Date(monday);
-      d.setDate(monday.getDate() + i);
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
       days.push(`${dayNames[d.getDay()]} ${d.getDate()}`);
     }
     return days;

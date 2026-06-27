@@ -81,8 +81,11 @@ VITE_FIREBASE_APP_ID=1:123456789:web:abcdef123456
 2. Start the frontend: `cd frontend && npm run dev`
 3. Open [http://localhost:5173](http://localhost:5173)
 4. Click **"Continue with Google"** on the login page
-5. Sign in with your Google account
-6. When you create a task using **"+ Add Task"**, it will automatically sync to your Google Calendar!
+5. **Note:** Since you just created this app, you might see a warning saying **"Google hasn't verified this app"**. This is normal for testing. To proceed:
+   - Click **"Advanced"** (or "Hide Advanced")
+   - Click the link at the bottom that says **"Go to ziptrrip-xxxxx.firebaseapp.com (unsafe)"**
+6. Sign in with your Google account
+7. When you create a task using **"+ Add Task"**, it will automatically sync to your Google Calendar!
 
 ---
 

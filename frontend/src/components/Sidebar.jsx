@@ -14,15 +14,19 @@ export default function Sidebar() {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Inbox', path: '/', icon: InboxIcon },
-    { name: 'Today', path: '/today', icon: CalendarIcon },
-    { name: 'Upcoming', path: '/upcoming', icon: ClockIcon },
+    { name: 'Inbox', filter: 'inbox', icon: InboxIcon },
+    { name: 'Today', filter: 'today', icon: CalendarIcon },
+    { name: 'Upcoming', filter: 'upcoming', icon: ClockIcon },
   ];
 
   const labels = [
-    { name: 'Personal', icon: UserIcon },
-    { name: 'Work', icon: BriefcaseIcon },
+    { name: 'Personal', category: 'Personal', icon: UserIcon },
+    { name: 'Work', category: 'Work', icon: BriefcaseIcon },
   ];
+
+  const searchParams = new URLSearchParams(location.search);
+  const currentFilter = searchParams.get('filter') || 'inbox';
+  const currentCategory = searchParams.get('category');
 
   return (
     <div style={{
@@ -42,11 +46,11 @@ export default function Sidebar() {
       <nav style={{ flex: 1 }}>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {navItems.map(item => {
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === '/' && currentFilter === item.filter && !currentCategory;
             const Icon = item.icon;
             return (
               <li key={item.name} style={{ marginBottom: '0.5rem', padding: '0 1rem' }}>
-                <Link to={item.path} style={{
+                <Link to={`/?filter=${item.filter}`} style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '1rem',
@@ -70,21 +74,25 @@ export default function Sidebar() {
           </div>
 
           {labels.map(label => {
+            const isActive = location.pathname === '/' && currentCategory === label.category;
             const Icon = label.icon;
             return (
               <li key={label.name} style={{ marginBottom: '0.5rem', padding: '0 1rem' }}>
-                <a href="#" style={{
+                <Link to={`/?category=${label.category}`} style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '1rem',
                   padding: '0.75rem 1rem',
-                  color: 'var(--text-secondary)',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: isActive ? 'var(--accent-teal)' : 'transparent',
+                  color: isActive ? 'white' : 'var(--text-secondary)',
                   textDecoration: 'none',
-                  fontWeight: '500'
+                  fontWeight: isActive ? '600' : '500',
+                  transition: 'background-color 0.2s'
                 }}>
                   <Icon width={20} />
                   {label.name}
-                </a>
+                </Link>
               </li>
             )
           })}
