@@ -5,6 +5,10 @@ import { fetchTodos, createTodo, updateTodo, deleteTodo } from '../api';
 import { syncTaskToGoogleCalendar } from '../calendarSync';
 import AddTaskModal from '../components/AddTaskModal';
 
+const getLocalDateString = (d = new Date()) => {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+};
+
 export default function Dashboard({ user }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +19,7 @@ export default function Dashboard({ user }) {
   const filterQuery = searchParams.get('filter') || 'inbox';
   const categoryQuery = searchParams.get('category') || '';
   
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString());
 
   const loadTodos = async () => {
     try {
@@ -77,7 +81,7 @@ export default function Dashboard({ user }) {
       return false;
     }
     // preset filters
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getLocalDateString();
     if (filterQuery === 'today' && t.date !== todayStr) return false;
     if (filterQuery === 'upcoming' && t.date <= todayStr) return false;
     
@@ -118,7 +122,7 @@ export default function Dashboard({ user }) {
       const d = new Date(sunday);
       d.setDate(sunday.getDate() + i);
       const label = `${dayNames[d.getDay()]} ${d.getDate()}`;
-      const fullDate = d.toISOString().split('T')[0];
+      const fullDate = getLocalDateString(d);
       days.push({ label, fullDate });
     }
     return days;

@@ -19,13 +19,19 @@
     "description": "Create a high-fidelity homepage prototype for the Olakart App.",
     "time": "11:00 AM",
     "date": "2024-10-14",
-    "progress": 20,
-    "status": "TO-DO",
+    "progress": 50,
+    "status": "IN PROGRESS",
     "priority": "High",
     "category": "Work",
     "createdAt": "2024-10-11T11:00:00.000Z",
     "deadline": "2024-10-18",
-    "subTasks": []
+    "subTasks": [
+      {
+        "id": "st1782576529689",
+        "title": "hfh",
+        "completed": false
+      }
+    ]
   },
   {
     "id": "3",
@@ -91,16 +97,30 @@
     "subTasks": []
   },
   {
-    "id": "6",
-    "title": "dhdhd",
-    "description": "dhdh",
+    "id": "7",
+    "title": "asdfg",
+    "description": "sgdg",
     "time": "",
-    "date": "2026-06-26",
+    "date": "2026-06-13",
     "progress": 0,
     "status": "TO-DO",
     "priority": "Medium",
-    "category": "Work",
-    "createdAt": "2026-06-27T16:05:53.494Z",
+    "category": "Personal",
+    "createdAt": "2026-06-27T16:06:45.127Z",
+    "deadline": "2026-06-30",
+    "subTasks": []
+  },
+  {
+    "id": "8",
+    "title": "bhaskar",
+    "description": "fsdf",
+    "time": "",
+    "date": "2026-06-27",
+    "progress": 0,
+    "status": "TO-DO",
+    "priority": "Medium",
+    "category": "Personal",
+    "createdAt": "2026-06-27T16:10:37.800Z",
     "deadline": "2026-06-30",
     "subTasks": []
   }

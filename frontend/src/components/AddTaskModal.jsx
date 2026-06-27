@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import CircularTimePicker from './CircularTimePicker';
 
+const getLocalDateString = (d = new Date()) => {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+};
+
 export default function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -18,7 +22,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
     onTaskCreated({
       title: title.trim(),
       description: description.trim(),
-      date: date || new Date().toISOString().split('T')[0],
+      date: date || getLocalDateString(),
       time,
       priority,
       category,

@@ -10,6 +10,10 @@ app.use(express.json());
 
 const dataFile = path.join(__dirname, 'todos.json');
 
+const getLocalDateString = (d = new Date()) => {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+};
+
 // Default seeded data
 const defaultTodos = [
   {
@@ -128,7 +132,7 @@ app.post('/api/todos', (req, res) => {
     title: todoData.title || 'Untitled Task',
     description: todoData.description || '',
     time: todoData.time || '',
-    date: todoData.date || new Date().toISOString().split('T')[0],
+    date: todoData.date || getLocalDateString(),
     progress: 0,
     status: todoData.status || 'TO-DO',
     priority: todoData.priority || 'Medium',
