@@ -1,13 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// In-memory database with seeded data
-let todos = [
+const dataFile = path.join(__dirname, 'todos.json');
+
+// Default seeded data
+const defaultTodos = [
   {
     id: '1',
     title: 'Team Meeting',
@@ -85,7 +89,24 @@ let todos = [
   }
 ];
 
-let nextId = 6;
+let todos = [];
+if (fs.existsSync(dataFile)) {
+  try {
+    todos = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
+  } catch (err) {
+    console.error('Error reading todos.json, using defaults:', err);
+    todos = defaultTodos;
+  }
+} else {
+  todos = defaultTodos;
+  fs.writeFileSync(dataFile, JSON.stringify(todos, null, 2));
+}
+
+const saveTodos = () => {
+  fs.writeFileSync(dataFile, JSON.stringify(todos, null, 2));
+};
+
+let nextId = todos.length > 0 ? Math.max(...todos.map(t => parseInt(t.id) || 0)) + 1 : 6;
 
 // GET all todos
 app.get('/api/todos', (req, res) => {
@@ -117,6 +138,7 @@ app.post('/api/todos', (req, res) => {
     subTasks: todoData.subTasks || []
   };
   todos.push(newTodo);
+  saveTodos();
   res.status(201).json(newTodo);
 });
 
@@ -125,6 +147,7 @@ app.put('/api/todos/:id', (req, res) => {
   const index = todos.findIndex(t => t.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: 'Todo not found' });
   todos[index] = { ...todos[index], ...req.body };
+  saveTodos();
   res.json(todos[index]);
 });
 
@@ -133,6 +156,7 @@ app.delete('/api/todos/:id', (req, res) => {
   const index = todos.findIndex(t => t.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: 'Todo not found' });
   const deleted = todos.splice(index, 1);
+  saveTodos();
   res.json({ message: 'Todo deleted', todo: deleted[0] });
 });
 

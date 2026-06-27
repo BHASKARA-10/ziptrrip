@@ -144,8 +144,8 @@ export default function CircularTimePicker({ value, onChange }) {
               </span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <button onClick={() => setIsAm(true)} style={{ background: isAm ? 'var(--primary-light)' : 'transparent', color: isAm ? 'white' : 'var(--text-secondary)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}>AM</button>
-              <button onClick={() => setIsAm(false)} style={{ background: !isAm ? 'var(--primary-light)' : 'transparent', color: !isAm ? 'white' : 'var(--text-secondary)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}>PM</button>
+              <button type="button" onClick={() => setIsAm(true)} style={{ background: isAm ? 'var(--primary-light)' : 'transparent', color: isAm ? 'white' : 'var(--text-secondary)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}>AM</button>
+              <button type="button" onClick={() => setIsAm(false)} style={{ background: !isAm ? 'var(--primary-light)' : 'transparent', color: !isAm ? 'white' : 'var(--text-secondary)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}>PM</button>
             </div>
           </div>
 

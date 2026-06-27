@@ -1,0 +1,93 @@
+[
+  {
+    "id": "1",
+    "title": "Team Meeting",
+    "description": "Group discussion for the new product launch and roadmap review.",
+    "time": "10:00 AM",
+    "date": "2024-10-14",
+    "progress": 48,
+    "status": "IN PROGRESS",
+    "priority": "Medium",
+    "category": "Work",
+    "createdAt": "2024-10-10T10:00:00.000Z",
+    "deadline": "2024-10-20",
+    "subTasks": []
+  },
+  {
+    "id": "2",
+    "title": "UI Design",
+    "description": "Create a high-fidelity homepage prototype for the Olakart App.",
+    "time": "11:00 AM",
+    "date": "2024-10-14",
+    "progress": 20,
+    "status": "TO-DO",
+    "priority": "High",
+    "category": "Work",
+    "createdAt": "2024-10-11T11:00:00.000Z",
+    "deadline": "2024-10-18",
+    "subTasks": []
+  },
+  {
+    "id": "3",
+    "title": "Wireframing TaskFlow App",
+    "description": "Make some ideation from sketches and wireframes for the core navigation system.",
+    "time": "12:00 PM",
+    "date": "2024-10-14",
+    "progress": 0,
+    "status": "TO-DO",
+    "priority": "High",
+    "category": "Work",
+    "createdAt": "2024-10-12T12:00:00.000Z",
+    "deadline": "2024-10-21",
+    "subTasks": []
+  },
+  {
+    "id": "4",
+    "title": "UI Design System",
+    "description": "Define tokens for typography, colors, and shadows for the enterprise library.",
+    "time": "1:30 PM",
+    "date": "2024-10-14",
+    "progress": 60,
+    "status": "IN PROGRESS",
+    "priority": "Medium",
+    "category": "Work",
+    "createdAt": "2024-10-08T09:00:00.000Z",
+    "deadline": "2024-10-31",
+    "subTasks": [
+      {
+        "id": "st1",
+        "title": "Audit existing Figma library components",
+        "completed": true
+      },
+      {
+        "id": "st2",
+        "title": "Define new color palette using HCT color space",
+        "completed": true
+      },
+      {
+        "id": "st3",
+        "title": "Update button component interactions",
+        "completed": false
+      },
+      {
+        "id": "st4",
+        "title": "Publish updated documentation",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Daily Scrums",
+    "description": "Updates on progress and blockers with the engineering team.",
+    "time": "9:00 AM",
+    "date": "2024-10-14",
+    "progress": 100,
+    "status": "DONE",
+    "priority": "Low",
+    "category": "Work",
+    "createdAt": "2024-10-14T09:00:00.000Z",
+    "deadline": "2024-10-14",
+    "subTasks": []
+  }
+]
