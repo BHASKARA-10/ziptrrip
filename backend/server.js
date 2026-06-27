@@ -1,128 +1,139 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const admin = require('firebase-admin');
 
-// Initialize Express App
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Initialize Firebase Admin (Only if config is provided)
-let db;
-try {
-  // To make it run locally without a real service account right away, we allow it to start even if it fails
-  if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
-    const serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT_PATH);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-    });
-    db = admin.firestore();
-    console.log("Firebase Admin Initialized.");
-  } else {
-    console.warn("WARNING: Firebase service account path not provided in .env. Using mock database.");
+// In-memory database with seeded data
+let todos = [
+  {
+    id: '1',
+    title: 'Team Meeting',
+    description: 'Group discussion for the new product launch and roadmap review.',
+    time: '10:00 AM',
+    date: '2024-10-14',
+    progress: 48,
+    status: 'IN PROGRESS',
+    priority: 'Medium',
+    category: 'Work',
+    createdAt: '2024-10-10T10:00:00.000Z',
+    deadline: '2024-10-20',
+    subTasks: []
+  },
+  {
+    id: '2',
+    title: 'UI Design',
+    description: 'Create a high-fidelity homepage prototype for the Olakart App.',
+    time: '11:00 AM',
+    date: '2024-10-14',
+    progress: 20,
+    status: 'TO-DO',
+    priority: 'High',
+    category: 'Work',
+    createdAt: '2024-10-11T11:00:00.000Z',
+    deadline: '2024-10-18',
+    subTasks: []
+  },
+  {
+    id: '3',
+    title: 'Wireframing TaskFlow App',
+    description: 'Make some ideation from sketches and wireframes for the core navigation system.',
+    time: '12:00 PM',
+    date: '2024-10-14',
+    progress: 0,
+    status: 'TO-DO',
+    priority: 'High',
+    category: 'Work',
+    createdAt: '2024-10-12T12:00:00.000Z',
+    deadline: '2024-10-21',
+    subTasks: []
+  },
+  {
+    id: '4',
+    title: 'UI Design System',
+    description: 'Define tokens for typography, colors, and shadows for the enterprise library.',
+    time: '1:30 PM',
+    date: '2024-10-14',
+    progress: 60,
+    status: 'IN PROGRESS',
+    priority: 'Medium',
+    category: 'Work',
+    createdAt: '2024-10-08T09:00:00.000Z',
+    deadline: '2024-10-31',
+    subTasks: [
+      { id: 'st1', title: 'Audit existing Figma library components', completed: true },
+      { id: 'st2', title: 'Define new color palette using HCT color space', completed: true },
+      { id: 'st3', title: 'Update button component interactions', completed: false },
+      { id: 'st4', title: 'Publish updated documentation', completed: false }
+    ]
+  },
+  {
+    id: '5',
+    title: 'Daily Scrums',
+    description: 'Updates on progress and blockers with the engineering team.',
+    time: '9:00 AM',
+    date: '2024-10-14',
+    progress: 100,
+    status: 'DONE',
+    priority: 'Low',
+    category: 'Work',
+    createdAt: '2024-10-14T09:00:00.000Z',
+    deadline: '2024-10-14',
+    subTasks: []
   }
-} catch (error) {
-  console.error("Error initializing Firebase:", error);
-}
+];
 
-// In-memory mock DB if Firebase is not configured
-let mockTodos = [];
+let nextId = 6;
 
-// CRUD Routes for Todos
-
-// Get all todos
-app.get('/api/todos', async (req, res) => {
-  try {
-    if (db) {
-      const snapshot = await db.collection('todos').get();
-      const todos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      res.json(todos);
-    } else {
-      res.json(mockTodos);
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// GET all todos
+app.get('/api/todos', (req, res) => {
+  res.json(todos);
 });
 
-// Get a single todo
-app.get('/api/todos/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (db) {
-      const doc = await db.collection('todos').doc(id).get();
-      if (!doc.exists) {
-        return res.status(404).json({ error: 'Todo not found' });
-      }
-      res.json({ id: doc.id, ...doc.data() });
-    } else {
-      const todo = mockTodos.find(t => t.id === id);
-      if (todo) res.json(todo);
-      else res.status(404).json({ error: 'Todo not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// GET single todo
+app.get('/api/todos/:id', (req, res) => {
+  const todo = todos.find(t => t.id === req.params.id);
+  if (!todo) return res.status(404).json({ error: 'Todo not found' });
+  res.json(todo);
 });
 
-// Create a new todo
-app.post('/api/todos', async (req, res) => {
-  try {
-    const todoData = req.body;
-    todoData.createdAt = new Date().toISOString();
-    
-    if (db) {
-      const docRef = await db.collection('todos').add(todoData);
-      res.status(201).json({ id: docRef.id, ...todoData });
-    } else {
-      const newTodo = { id: Date.now().toString(), ...todoData };
-      mockTodos.push(newTodo);
-      res.status(201).json(newTodo);
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// CREATE todo
+app.post('/api/todos', (req, res) => {
+  const todoData = req.body;
+  const newTodo = {
+    id: String(nextId++),
+    title: todoData.title || 'Untitled Task',
+    description: todoData.description || '',
+    time: todoData.time || '',
+    date: todoData.date || new Date().toISOString().split('T')[0],
+    progress: 0,
+    status: todoData.status || 'TO-DO',
+    priority: todoData.priority || 'Medium',
+    category: todoData.category || 'Personal',
+    createdAt: new Date().toISOString(),
+    deadline: todoData.deadline || '',
+    subTasks: todoData.subTasks || []
+  };
+  todos.push(newTodo);
+  res.status(201).json(newTodo);
 });
 
-// Update a todo
-app.put('/api/todos/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updateData = req.body;
-    
-    if (db) {
-      await db.collection('todos').doc(id).update(updateData);
-      res.json({ id, ...updateData });
-    } else {
-      const index = mockTodos.findIndex(t => t.id === id);
-      if (index !== -1) {
-        mockTodos[index] = { ...mockTodos[index], ...updateData };
-        res.json(mockTodos[index]);
-      } else {
-        res.status(404).json({ error: 'Todo not found' });
-      }
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// UPDATE todo
+app.put('/api/todos/:id', (req, res) => {
+  const index = todos.findIndex(t => t.id === req.params.id);
+  if (index === -1) return res.status(404).json({ error: 'Todo not found' });
+  todos[index] = { ...todos[index], ...req.body };
+  res.json(todos[index]);
 });
 
-// Delete a todo
-app.delete('/api/todos/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    if (db) {
-      await db.collection('todos').doc(id).delete();
-      res.json({ message: 'Todo deleted successfully' });
-    } else {
-      mockTodos = mockTodos.filter(t => t.id !== id);
-      res.json({ message: 'Todo deleted successfully' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// DELETE todo
+app.delete('/api/todos/:id', (req, res) => {
+  const index = todos.findIndex(t => t.id === req.params.id);
+  if (index === -1) return res.status(404).json({ error: 'Todo not found' });
+  const deleted = todos.splice(index, 1);
+  res.json({ message: 'Todo deleted', todo: deleted[0] });
 });
 
 const PORT = process.env.PORT || 5000;
