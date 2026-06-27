@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Dashboard from './pages/Dashboard';
 import TaskDetail from './pages/TaskDetail';
 import Login from './pages/Login';
+import Calendar from './pages/Calendar';
 import Sidebar from './components/Sidebar';
 import TopNav from './components/TopNav';
 
@@ -38,6 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard user={user} />} />
             <Route path="/task/:id" element={<TaskDetail user={user} />} />
+            <Route path="/calendar" element={<Calendar user={user} />} />
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

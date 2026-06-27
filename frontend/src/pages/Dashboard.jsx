@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PlusIcon, PencilIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { syncTaskToGoogleCalendar } from '../calendarSync';
 
 export default function Dashboard({ user }) {
   const [tasks, setTasks] = useState([]);
@@ -18,6 +19,21 @@ export default function Dashboard({ user }) {
     { id: '5', title: 'Daily Scrums', desc: 'Updates on progress and blockers with the engineering team.', time: '9:00 AM', status: 'DONE', color: 'gray' },
   ];
 
+  const handleAddTask = async () => {
+    const newTask = { title: "New Generated Task", description: "This was generated from Dashboard." };
+    alert("Creating task in UI...");
+    
+    if (user?.type === 'google' && user.googleAccessToken) {
+      alert("Syncing to Google Calendar...");
+      const success = await syncTaskToGoogleCalendar(newTask, user.googleAccessToken);
+      if (success) {
+        alert("Successfully synced to Google Calendar!");
+      } else {
+        alert("Failed to sync to Google Calendar.");
+      }
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
@@ -27,7 +43,7 @@ export default function Dashboard({ user }) {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Good Morning, {user?.name?.split(' ')[0] || 'User'}!</p>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>You have <span style={{ color: 'var(--primary-light)' }}>49 tasks</span> this month 👍</h1>
         </div>
-        <button className="btn-primary" style={{ padding: '0.75rem 2rem', borderRadius: '30px' }}>
+        <button onClick={handleAddTask} className="btn-primary" style={{ padding: '0.75rem 2rem', borderRadius: '30px' }}>
           <PlusIcon width={20} />
           Add Task
         </button>
